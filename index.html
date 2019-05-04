@@ -1,0 +1,68 @@
+<label>
+    .tree file:
+    <br>
+    <input type="file" name="tree" id="fileInput">
+</label>
+<br>
+<br>
+<label>
+    Original:
+    <br>
+    <textarea id="original" rows="8" cols="80"></textarea>
+</label>
+<br>
+<br>
+<label>
+    Removed []:
+    <br>
+    <textarea id="fileContents" rows="8" cols="80"></textarea>
+</label>
+<br>
+<br>
+<label>
+    Numbers replaced to values:
+    <br>
+    <textarea id="replaced" rows="8" cols="80"></textarea>
+</label>
+
+<script type="text/javascript">
+    const fileInput = document.getElementById(`fileInput`);
+    fileInput.addEventListener(`change`, (e) => {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file, "UTF-8");
+        reader.onload = function (evt) {
+            const fileText = evt.target.result;
+            document.getElementById("original").innerHTML = fileText;
+            const converted = fileText.replace(/\[[^\]]*\]/g, "");
+            document.getElementById("fileContents").innerHTML = converted;
+            const lines = converted.split(`\n`);
+            let started = false;
+            const translates = [];
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+            	if (!started) {
+            	    if (line.includes(`Begin trees;`)) {
+            			started = true;
+            			continue;
+            	    }
+            	} else {
+            		if (line.includes(`;`)) {
+            			break;
+            		}
+            		if (line.includes(`Translate`)) {
+            			continue;
+            		}
+            		const [num, value] = line.replace(`,`, ``).trim().split(` `);
+            		translates.push([num, value]);
+            	}
+            }
+            let replaced = converted;
+            for (let i = translates.length - 1; i >= 0; i--) {
+            	const [from, to] = translates[i];
+            	replaced = replaced.replace(`${from}:`, `${to}:`)
+            }
+            document.getElementById("replaced").innerHTML = replaced;
+        }
+    });
+</script>
