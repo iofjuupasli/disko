@@ -70,7 +70,7 @@
             	replaced = replaced.replace(`${from}:`, `${to}:`)
             }
             document.getElementById("replaced").innerHTML = replaced;
-            const cleaned = replaced.match(/tree \w+ ?= ?(.*)End;/s)[1];
+            const cleaned = replaced.match(/tree \w+ ?= ?([\s\S]*)End;/)[1];
             document.getElementById("cleaned").innerHTML = cleaned;
         }
     });
