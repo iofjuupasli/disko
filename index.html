@@ -24,6 +24,13 @@
     <br>
     <textarea id="replaced" rows="8" cols="80"></textarea>
 </label>
+<br>
+<br>
+<label>
+    Cleaned up:
+    <br>
+    <textarea id="cleaned" rows="8" cols="80"></textarea>
+</label>
 
 <script type="text/javascript">
     const fileInput = document.getElementById(`fileInput`);
@@ -63,6 +70,8 @@
             	replaced = replaced.replace(`${from}:`, `${to}:`)
             }
             document.getElementById("replaced").innerHTML = replaced;
+            const cleaned = replaced.match(/tree \w+ ?= ?(.*)End;/s)[1];
+            document.getElementById("cleaned").innerHTML = cleaned;
         }
     });
 </script>
